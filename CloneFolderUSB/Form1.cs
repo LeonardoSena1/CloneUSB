@@ -1,5 +1,4 @@
 using System.Management;
-using System.Windows.Forms;
 
 namespace CloneFolderUSB
 {
@@ -15,7 +14,7 @@ namespace CloneFolderUSB
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            SourcelistBoxDrives(null,null);
+            SourcelistBoxDrives(null, null);
 
             DestinationlistBoxDrives(null, null);
         }
@@ -30,8 +29,6 @@ namespace CloneFolderUSB
                     foreach (ManagementObject logicalDisk in new ManagementObjectSearcher(
                         "ASSOCIATORS OF {Win32_DiskPartition.DeviceID='" + partition["DeviceID"] + "'} WHERE AssocClass=Win32_LogicalDiskToPartition").Get())
                         SourceListBoxDrives.Items.Add($"Drive: {logicalDisk["DeviceID"].ToString()}, " +
-                            $"Volume Name: {logicalDisk["VolumeName"].ToString()}, " +
-                            $"File System: {logicalDisk["FileSystem"].ToString()}, " +
                             $"Size: {FormatSize(Convert.ToUInt64(logicalDisk["Size"]))}, " +
                             $"Free Space: {FormatSize(Convert.ToUInt64(logicalDisk["freeSpace"]))}");
 
@@ -41,9 +38,8 @@ namespace CloneFolderUSB
 
         private void ClickSelectedDriveSource(object sender, EventArgs e)
         {
-            string selectedDrive = SourceListBoxDrives.SelectedItems[0].ToString();
-
-            DestinationListBoxDrives.Items.Remove(selectedDrive);
+            if (SourceListBoxDrives.SelectedItems.Count != 0)
+                DestinationListBoxDrives.Items.Remove(SourceListBoxDrives.SelectedItems[0].ToString());
         }
 
         private string FormatSize(ulong bytes)
@@ -70,8 +66,6 @@ namespace CloneFolderUSB
                     foreach (ManagementObject logicalDisk in new ManagementObjectSearcher(
                         "ASSOCIATORS OF {Win32_DiskPartition.DeviceID='" + partition["DeviceID"] + "'} WHERE AssocClass=Win32_LogicalDiskToPartition").Get())
                         DestinationListBoxDrives.Items.Add($"Drive: {logicalDisk["DeviceID"].ToString()}, " +
-                            $"Volume Name: {logicalDisk["VolumeName"].ToString()}, " +
-                            $"File System: {logicalDisk["FileSystem"].ToString()}, " +
                             $"Size: {FormatSize(Convert.ToUInt64(logicalDisk["Size"]))}, " +
                             $"Free Space: {FormatSize(Convert.ToUInt64(logicalDisk["freeSpace"]))}");
 
@@ -92,7 +86,7 @@ namespace CloneFolderUSB
             this.DestinationlistBoxDrives(null, null);
         }
 
-        private void RefreshCLickSoucer(object sender, EventArgs e) 
+        private void RefreshCLickSoucer(object sender, EventArgs e)
         {
             SourceListBoxDrives.Items.Clear();
             SourceListBoxDrives.ClearSelected();
@@ -100,22 +94,123 @@ namespace CloneFolderUSB
             this.SourcelistBoxDrives(null, null);
         }
 
-        private void ClickIniciar(object sender, EventArgs e)   
+        private void ClickIniciar(object sender, EventArgs e)
         {
-            progressBar2_Click();
+            string soucer = SourceListBoxDrives.Text;
+            string destination = DestinationListBoxDrives.Text;
+
+            if (string.IsNullOrEmpty(soucer) || string.IsNullOrEmpty(destination))
+                MessageBox.Show("Selecione a origem e o destino corretamente");
+            else
+            {
+                try
+                {
+                    ButtonSendSelectedDriveSource.Enabled = false;
+                    ButtonSendSelectedDriveDestination.Enabled = false;
+                    ButtonRefreshDestination.Enabled = false;
+                    ButtonRefreshSoucer.Enabled = false;
+                    ButtonIniciar.Enabled = false;
+
+                    soucer = soucer.Split(':')[1].Trim() + ":";
+                    destination = destination.Split(':')[1].Trim() + ":";
+
+                    if (CheckIfDiskExists(soucer) && CheckIfDiskExists(destination))
+                    {
+                        progressBar(IsValueMax: true, ValueMax: CountFilesInDirectory(soucer));
+                        CopyFolder(soucer, destination);
+                        progressBar(Final: true);
+                        label2.Visible = true;
+                    }
+                    else
+                        throw new Exception("Disk Local não encontrado");
+
+                    ButtonSendSelectedDriveSource.Enabled = true;
+                    ButtonSendSelectedDriveDestination.Enabled = true;
+                    ButtonRefreshDestination.Enabled = true;
+                    ButtonRefreshSoucer.Enabled = true;
+                    ButtonIniciar.Enabled = true;
+                }
+                catch (UnauthorizedAccessException ex)
+                {
+                    MessageBox.Show($"Access denied: {ex.Message}");
+                    ButtonSendSelectedDriveSource.Enabled = true;
+                    ButtonSendSelectedDriveDestination.Enabled = true;
+                    ButtonRefreshDestination.Enabled = true;
+                    ButtonRefreshSoucer.Enabled = true;
+                    ButtonIniciar.Enabled = true;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message);
+                    ButtonSendSelectedDriveSource.Enabled = true;
+                    ButtonSendSelectedDriveDestination.Enabled = true;
+                    ButtonRefreshDestination.Enabled = true;
+                    ButtonRefreshSoucer.Enabled = true;
+                    ButtonIniciar.Enabled = true;
+                }
+            }
         }
 
-        private void progressBar2_Click()
+        private void progressBar(int i = 0, bool Final = false, bool IsValueMax = false, int ValueMax = 100)
         {
-            int maxValue = 100;
+            if (IsValueMax)
+                progressBar2.Maximum = ValueMax;
 
-            for (int i = 0; i <= maxValue; i++)
+            progressBar2.Value = i;
+
+            if (Final)
+                progressBar2.Value = progressBar2.Maximum;
+
+            Thread.Sleep(20);
+            Application.DoEvents();
+        }
+
+        void CopyFolder(string sourcePath, string targetPath)
+        {
+            int indexProgressBar = 1;
+            string[] files = Directory.GetFiles(sourcePath);
+            string[] subDirectories = Directory.GetDirectories(sourcePath);
+
+            foreach (string file in files)
             {
-                progressBar2.Value = i;
-                Thread.Sleep(50); 
-
-                Application.DoEvents();
+                //File.Copy(file, Path.Combine(targetPath, Path.GetFileName(file)).ToString(), true);
+                progressBar(indexProgressBar);
+                indexProgressBar++;
             }
+
+            foreach (string subDir in subDirectories)
+            {
+                if (!subDir.Contains("System Volume Information"))
+                    CopyFolder(subDir, Path.Combine(targetPath, Path.GetFileName(subDir)));
+                progressBar(indexProgressBar);
+                indexProgressBar++;
+            }
+        }
+
+        static bool CheckIfDiskExists(string diskName)
+        {
+            DriveInfo[] drives = DriveInfo.GetDrives();
+            foreach (DriveInfo drive in drives)
+                if (string.Equals(drive.Name.Remove(2), diskName, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            return false;
+        }
+
+        static int CountFilesInDirectory(string directoryPath)
+        {
+            int fileCount = 0;
+
+            string[] files = Directory.GetFiles(directoryPath);
+
+            fileCount += files.Length;
+
+            string[] subDirectories = Directory.GetDirectories(directoryPath);
+
+            foreach (string subDirectory in subDirectories)
+                if (!subDirectory.Contains("System Volume Information"))
+                    fileCount += CountFilesInDirectory(subDirectory);
+
+            return fileCount;
         }
     }
 }
