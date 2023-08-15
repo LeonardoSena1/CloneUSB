@@ -54,27 +54,5 @@ namespace CloneFolderUSB.Components
                     return true;
             return false;
         }
-
-        public static void CopyFolder(string sourcePath, string targetPath)
-        {
-            int indexProgressBar = 1;
-            string[] files = Directory.GetFiles(sourcePath);
-            string[] subDirectories = Directory.GetDirectories(sourcePath);
-
-            foreach (string file in files)
-            {
-                //File.Copy(file, Path.Combine(targetPath, Path.GetFileName(file)).ToString(), true);
-                progressBar(indexProgressBar);
-                indexProgressBar++;
-            }
-
-            foreach (string subDir in subDirectories)
-            {
-                if (!subDir.Contains("System Volume Information"))
-                    CopyFolder(subDir, Path.Combine(targetPath, Path.GetFileName(subDir)));
-                progressBar(indexProgressBar);
-                indexProgressBar++;
-            }
-        }
     }
 }

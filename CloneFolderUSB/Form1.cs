@@ -103,6 +103,7 @@ namespace CloneFolderUSB
         {
             SourceListBoxDrives.Items.Clear();
             SourceListBoxDrives.ClearSelected();
+            DestinationListBoxDrives.ClearSelected();
 
             this.SourcelistBoxDrives(null, null);
         }
@@ -122,6 +123,9 @@ namespace CloneFolderUSB
 
                     soucer = soucer.Split(':')[1].Trim() + ":";
                     destination = destination.Split(':')[1].Trim() + ":";
+
+                    if (soucer.Equals(destination))
+                        throw new Exception("Impossível clonar um dispositivo no mesmo dispositivo.");
 
                     if (PreparationForm1.CheckIfDiskExists(soucer) && PreparationForm1.CheckIfDiskExists(destination))
                     {
