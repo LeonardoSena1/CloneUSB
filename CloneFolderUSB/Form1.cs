@@ -102,7 +102,20 @@ namespace CloneFolderUSB
 
         private void ClickIniciar(object sender, EventArgs e)   
         {
+            progressBar2_Click();
+        }
 
+        private void progressBar2_Click()
+        {
+            int maxValue = 100;
+
+            for (int i = 0; i <= maxValue; i++)
+            {
+                progressBar2.Value = i;
+                Thread.Sleep(50); 
+
+                Application.DoEvents();
+            }
         }
     }
 }

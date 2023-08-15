@@ -35,6 +35,7 @@
             this.ButtonRefreshDestination = new System.Windows.Forms.Button();
             this.ButtonRefreshSoucer = new System.Windows.Forms.Button();
             this.ButtonIniciar = new System.Windows.Forms.Button();
+            this.progressBar2 = new System.Windows.Forms.ProgressBar();
             this.SuspendLayout();
             // 
             // SourceListBoxDrives
@@ -93,19 +94,27 @@
             // 
             // ButtonIniciar
             // 
-            this.ButtonIniciar.Location = new System.Drawing.Point(154, 268);
+            this.ButtonIniciar.Location = new System.Drawing.Point(198, 302);
             this.ButtonIniciar.Name = "ButtonIniciar";
             this.ButtonIniciar.Size = new System.Drawing.Size(75, 23);
             this.ButtonIniciar.TabIndex = 8;
             this.ButtonIniciar.Text = "Iniciar";
             this.ButtonIniciar.UseVisualStyleBackColor = true;
-            this.ButtonIniciar.Click += new System.EventHandler(this.ClickIniciar);
+            this.ButtonIniciar.Click += new System.EventHandler(this.ClickIniciar);           
+            // 
+            // progressBar2
+            // 
+            this.progressBar2.Location = new System.Drawing.Point(279, 293);
+            this.progressBar2.Name = "progressBar2";
+            this.progressBar2.Size = new System.Drawing.Size(388, 39);
+            this.progressBar2.TabIndex = 9;            
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(900, 450);
+            this.ClientSize = new System.Drawing.Size(900, 390);
+            this.Controls.Add(this.progressBar2);
             this.Controls.Add(this.ButtonIniciar);
             this.Controls.Add(this.ButtonRefreshSoucer);
             this.Controls.Add(this.ButtonRefreshDestination);
@@ -129,5 +138,6 @@
         private Button ButtonRefreshDestination;
         private Button ButtonRefreshSoucer;
         private Button ButtonIniciar;
+        private ProgressBar progressBar2;
     }
 }
