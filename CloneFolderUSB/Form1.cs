@@ -1,3 +1,4 @@
+using CloneFolderUSB.Components;
 using System.Management;
 
 namespace CloneFolderUSB
@@ -7,13 +8,19 @@ namespace CloneFolderUSB
         public Form1()
         {
             InitializeComponent();
-            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;            
             this.MaximizeBox = false;
             this.MinimizeBox = false;
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            this.Icon = new Icon(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Sources\\Img\\usb-drive.ico"));
+            this.DireitaEsquerda.Image =
+                PreparationForm1.ResizeImage(Image.FromFile(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Sources\\Img\\direita-e-esquerda.png")),
+                DireitaEsquerda.Width, DireitaEsquerda.Height);
+
             SourcelistBoxDrives(null, null);
 
             DestinationlistBoxDrives(null, null);
@@ -70,11 +77,17 @@ namespace CloneFolderUSB
                             $"Free Space: {FormatSize(Convert.ToUInt64(logicalDisk["freeSpace"]))}");
 
             ButtonRefreshDestination.Click += RefreshCLickDestination;
+            ButtonSendSelectedDriveDestination.Click += ClickSelectedDriveDestination;
         }
 
         private void ClickSelectedDriveDestination(object sender, EventArgs e)
         {
-
+            if (string.IsNullOrEmpty(SourceListBoxDrives.Text))
+                MessageBox.Show("Selecione primeiro a origem");
+            else if (string.IsNullOrEmpty(DestinationListBoxDrives.Text))
+                MessageBox.Show("Selecione corretamente o destino");
+            else
+                ButtonIniciar.Enabled = true;
         }
 
         private void RefreshCLickDestination(object sender, EventArgs e)
@@ -105,48 +118,32 @@ namespace CloneFolderUSB
             {
                 try
                 {
-                    ButtonSendSelectedDriveSource.Enabled = false;
-                    ButtonSendSelectedDriveDestination.Enabled = false;
-                    ButtonRefreshDestination.Enabled = false;
-                    ButtonRefreshSoucer.Enabled = false;
-                    ButtonIniciar.Enabled = false;
+                    IsShowButtons(false);
 
                     soucer = soucer.Split(':')[1].Trim() + ":";
                     destination = destination.Split(':')[1].Trim() + ":";
 
-                    if (CheckIfDiskExists(soucer) && CheckIfDiskExists(destination))
+                    if (PreparationForm1.CheckIfDiskExists(soucer) && PreparationForm1.CheckIfDiskExists(destination))
                     {
-                        progressBar(IsValueMax: true, ValueMax: CountFilesInDirectory(soucer));
+                        progressBar(IsValueMax: true, ValueMax: PreparationForm1.CountFilesInDirectory(soucer));
                         CopyFolder(soucer, destination);
                         progressBar(Final: true);
-                        label2.Visible = true;
+                        labelConcluid.Visible = true;
                     }
                     else
                         throw new Exception("Disk Local não encontrado");
 
-                    ButtonSendSelectedDriveSource.Enabled = true;
-                    ButtonSendSelectedDriveDestination.Enabled = true;
-                    ButtonRefreshDestination.Enabled = true;
-                    ButtonRefreshSoucer.Enabled = true;
-                    ButtonIniciar.Enabled = true;
+                    IsShowButtons(true);
                 }
                 catch (UnauthorizedAccessException ex)
                 {
                     MessageBox.Show($"Access denied: {ex.Message}");
-                    ButtonSendSelectedDriveSource.Enabled = true;
-                    ButtonSendSelectedDriveDestination.Enabled = true;
-                    ButtonRefreshDestination.Enabled = true;
-                    ButtonRefreshSoucer.Enabled = true;
-                    ButtonIniciar.Enabled = true;
+                    IsShowButtons(true);
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message);
-                    ButtonSendSelectedDriveSource.Enabled = true;
-                    ButtonSendSelectedDriveDestination.Enabled = true;
-                    ButtonRefreshDestination.Enabled = true;
-                    ButtonRefreshSoucer.Enabled = true;
-                    ButtonIniciar.Enabled = true;
+                    IsShowButtons(true);
                 }
             }
         }
@@ -187,30 +184,13 @@ namespace CloneFolderUSB
             }
         }
 
-        static bool CheckIfDiskExists(string diskName)
+        private void IsShowButtons(bool Show)
         {
-            DriveInfo[] drives = DriveInfo.GetDrives();
-            foreach (DriveInfo drive in drives)
-                if (string.Equals(drive.Name.Remove(2), diskName, StringComparison.OrdinalIgnoreCase))
-                    return true;
-            return false;
-        }
-
-        static int CountFilesInDirectory(string directoryPath)
-        {
-            int fileCount = 0;
-
-            string[] files = Directory.GetFiles(directoryPath);
-
-            fileCount += files.Length;
-
-            string[] subDirectories = Directory.GetDirectories(directoryPath);
-
-            foreach (string subDirectory in subDirectories)
-                if (!subDirectory.Contains("System Volume Information"))
-                    fileCount += CountFilesInDirectory(subDirectory);
-
-            return fileCount;
+            ButtonSendSelectedDriveSource.Enabled = Show;
+            ButtonSendSelectedDriveDestination.Enabled = Show;
+            ButtonRefreshDestination.Enabled = Show;
+            ButtonRefreshSoucer.Enabled = Show;
+            ButtonIniciar.Enabled = Show;
         }
     }
 }

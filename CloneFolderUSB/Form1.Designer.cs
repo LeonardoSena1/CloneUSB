@@ -1,4 +1,6 @@
-﻿namespace CloneFolderUSB
+﻿using System.Resources;
+
+namespace CloneFolderUSB
 {
     partial class Form1
     {
@@ -6,6 +8,8 @@
         ///  Required designer variable.
         /// </summary>
         private System.ComponentModel.IContainer components = null;
+
+        private ResourceManager resourceManager;
 
         /// <summary>
         ///  Clean up any resources being used.
@@ -36,8 +40,12 @@
             this.ButtonRefreshSoucer = new System.Windows.Forms.Button();
             this.ButtonIniciar = new System.Windows.Forms.Button();
             this.progressBar2 = new System.Windows.Forms.ProgressBar();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
+            this.labelCLonarUsb = new System.Windows.Forms.Label();
+            this.labelConcluid = new System.Windows.Forms.Label();
+            this.labelOrigem = new System.Windows.Forms.Label();
+            this.labelDestino = new System.Windows.Forms.Label();
+            this.DireitaEsquerda = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.DireitaEsquerda)).BeginInit();
             this.SuspendLayout();
             // 
             // SourceListBoxDrives
@@ -62,14 +70,14 @@
             // 
             this.DestinationListBoxDrives.FormattingEnabled = true;
             this.DestinationListBoxDrives.ItemHeight = 15;
-            this.DestinationListBoxDrives.Location = new System.Drawing.Point(299, 63);
+            this.DestinationListBoxDrives.Location = new System.Drawing.Point(317, 63);
             this.DestinationListBoxDrives.Name = "DestinationListBoxDrives";
             this.DestinationListBoxDrives.Size = new System.Drawing.Size(235, 124);
             this.DestinationListBoxDrives.TabIndex = 3;
             // 
             // ButtonSendSelectedDriveDestination
             // 
-            this.ButtonSendSelectedDriveDestination.Location = new System.Drawing.Point(299, 193);
+            this.ButtonSendSelectedDriveDestination.Location = new System.Drawing.Point(317, 193);
             this.ButtonSendSelectedDriveDestination.Name = "ButtonSendSelectedDriveDestination";
             this.ButtonSendSelectedDriveDestination.Size = new System.Drawing.Size(75, 23);
             this.ButtonSendSelectedDriveDestination.TabIndex = 4;
@@ -78,7 +86,7 @@
             // 
             // ButtonRefreshDestination
             // 
-            this.ButtonRefreshDestination.Location = new System.Drawing.Point(380, 193);
+            this.ButtonRefreshDestination.Location = new System.Drawing.Point(398, 193);
             this.ButtonRefreshDestination.Name = "ButtonRefreshDestination";
             this.ButtonRefreshDestination.Size = new System.Drawing.Size(75, 23);
             this.ButtonRefreshDestination.TabIndex = 5;
@@ -103,42 +111,72 @@
             this.ButtonIniciar.Text = "Iniciar";
             this.ButtonIniciar.UseVisualStyleBackColor = true;
             this.ButtonIniciar.Click += new System.EventHandler(this.ClickIniciar);
+            this.ButtonIniciar.Enabled= false;
             // 
             // progressBar2
             // 
             this.progressBar2.Location = new System.Drawing.Point(106, 250);
             this.progressBar2.Name = "progressBar2";
-            this.progressBar2.Size = new System.Drawing.Size(428, 39);
+            this.progressBar2.Size = new System.Drawing.Size(446, 39);
             this.progressBar2.TabIndex = 9;
             // 
-            // label1
+            // labelCLonarUsb
             // 
-            this.label1.AutoSize = true;
-            this.label1.BackColor = System.Drawing.Color.White;
-            this.label1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.label1.Location = new System.Drawing.Point(25, 18);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(157, 17);
-            this.label1.TabIndex = 10;
-            this.label1.Text = "Clonar um USB para o outro";
+            this.labelCLonarUsb.AutoSize = true;
+            this.labelCLonarUsb.BackColor = System.Drawing.Color.White;
+            this.labelCLonarUsb.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.labelCLonarUsb.Location = new System.Drawing.Point(25, 18);
+            this.labelCLonarUsb.Name = "labelCLonarUsb";
+            this.labelCLonarUsb.Size = new System.Drawing.Size(157, 17);
+            this.labelCLonarUsb.TabIndex = 10;
+            this.labelCLonarUsb.Text = "Criar e gravar uma imagem de um drive usb";
             // 
-            // label2
+            // labelConcluid
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(299, 292);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(38, 15);
-            this.label2.TabIndex = 11;
-            this.label2.Text = "Concluído";
-            this.label2.Visible = false;
+            this.labelConcluid.AutoSize = true;
+            this.labelConcluid.Location = new System.Drawing.Point(280, 292);
+            this.labelConcluid.Name = "labelConcluid";
+            this.labelConcluid.Size = new System.Drawing.Size(62, 15);
+            this.labelConcluid.TabIndex = 11;
+            this.labelConcluid.Text = "Concluído";
+            this.labelConcluid.Visible = false;
+            // 
+            // labelOrigem
+            // 
+            this.labelOrigem.AutoSize = true;
+            this.labelOrigem.Location = new System.Drawing.Point(115, 45);
+            this.labelOrigem.Name = "labelOrigem";
+            this.labelOrigem.Size = new System.Drawing.Size(47, 15);
+            this.labelOrigem.TabIndex = 12;
+            this.labelOrigem.Text = "Origem";
+            // 
+            // labelDestino
+            // 
+            this.labelDestino.AutoSize = true;
+            this.labelDestino.Location = new System.Drawing.Point(413, 45);
+            this.labelDestino.Name = "labelDestino";
+            this.labelDestino.Size = new System.Drawing.Size(47, 15);
+            this.labelDestino.TabIndex = 13;
+            this.labelDestino.Text = "Destino";
+            // 
+            // DireitaEsquerda
+            // 
+            this.DireitaEsquerda.Location = new System.Drawing.Point(270, 108);
+            this.DireitaEsquerda.Name = "DireitaEsquerda";
+            this.DireitaEsquerda.Size = new System.Drawing.Size(38, 39);
+            this.DireitaEsquerda.TabIndex = 14;
+            this.DireitaEsquerda.TabStop = false;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(562, 346);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
+            this.ClientSize = new System.Drawing.Size(579, 343);
+            this.Controls.Add(this.DireitaEsquerda);
+            this.Controls.Add(this.labelDestino);
+            this.Controls.Add(this.labelOrigem);
+            this.Controls.Add(this.labelConcluid);
+            this.Controls.Add(this.labelCLonarUsb);
             this.Controls.Add(this.progressBar2);
             this.Controls.Add(this.ButtonIniciar);
             this.Controls.Add(this.ButtonRefreshSoucer);
@@ -147,9 +185,10 @@
             this.Controls.Add(this.DestinationListBoxDrives);
             this.Controls.Add(this.ButtonSendSelectedDriveSource);
             this.Controls.Add(this.SourceListBoxDrives);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "Clone usb to usb";
+            this.Text = "Copiar Pendrive";
             this.Load += new System.EventHandler(this.MainForm_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.DireitaEsquerda)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -165,7 +204,10 @@
         private Button ButtonRefreshSoucer;
         private Button ButtonIniciar;
         private ProgressBar progressBar2;
-        private Label label1;
-        private Label label2;
+        private Label labelCLonarUsb;
+        private Label labelConcluid;
+        private Label labelOrigem;
+        private Label labelDestino;
+        private PictureBox DireitaEsquerda;
     }
 }
