@@ -1,4 +1,5 @@
 using System.Management;
+using System.Windows.Forms;
 
 namespace CloneFolderUSB
 {
@@ -12,50 +13,37 @@ namespace CloneFolderUSB
             this.MinimizeBox = false;
         }
 
-        private void listBoxDrives(object sender, EventArgs e)
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            SourcelistBoxDrives(null,null);
+
+            DestinationlistBoxDrives(null, null);
+        }
+
+        private void SourcelistBoxDrives(object sender, EventArgs e)
         {
             ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_DiskDrive WHERE InterfaceType='USB'");
 
             foreach (ManagementObject disk in searcher.Get())
-            {
                 foreach (ManagementObject partition in new ManagementObjectSearcher(
                     "ASSOCIATORS OF {Win32_DiskDrive.DeviceID='" + disk["DeviceID"] + "'} WHERE AssocClass=Win32_DiskDriveToDiskPartition").Get())
-                {
                     foreach (ManagementObject logicalDisk in new ManagementObjectSearcher(
                         "ASSOCIATORS OF {Win32_DiskPartition.DeviceID='" + partition["DeviceID"] + "'} WHERE AssocClass=Win32_LogicalDiskToPartition").Get())
-                    {
-                        checkedListBoxDrives.Items.Add($"Drive: {logicalDisk["DeviceID"].ToString()}, " +
+                        SourceListBoxDrives.Items.Add($"Drive: {logicalDisk["DeviceID"].ToString()}, " +
                             $"Volume Name: {logicalDisk["VolumeName"].ToString()}, " +
                             $"File System: {logicalDisk["FileSystem"].ToString()}, " +
                             $"Size: {FormatSize(Convert.ToUInt64(logicalDisk["Size"]))}, " +
                             $"Free Space: {FormatSize(Convert.ToUInt64(logicalDisk["freeSpace"]))}");
-                    }
-                }
-            }
 
-            SendSelectedDrive.Click += ClickSelectedDrive;
-            RefreshDriver.Click += RefreshAllDriver;
+            ButtonSendSelectedDriveSource.Click += ClickSelectedDriveSource;
+            ButtonRefreshSoucer.Click += RefreshCLickSoucer;
         }
 
-        private void ClickSelectedDrive(object sender, EventArgs e)
+        private void ClickSelectedDriveSource(object sender, EventArgs e)
         {
-            // Iterar sobre os itens selecionados no CheckedListBox
-            foreach (object selectedItem in checkedListBoxDrives.SelectedItems)
-            {
-                string selectedDrive = selectedItem.ToString();
+            string selectedDrive = SourceListBoxDrives.SelectedItems[0].ToString();
 
-                // Aqui você pode lidar com a lógica do evento para cada driver selecionado
-                // Por exemplo, exibir uma mensagem ou executar alguma ação com o driver selecionado
-                MessageBox.Show($"Driver selecionado: {selectedDrive}");
-            }
-        }
-
-        private void RefreshAllDriver(object sender, EventArgs e)
-        {
-            checkedListBoxDrives.ClearSelected();
-            checkedListBoxDrives.Items.Clear();
-
-            this.listBoxDrives(null, null);
+            DestinationListBoxDrives.Items.Remove(selectedDrive);
         }
 
         private string FormatSize(ulong bytes)
@@ -71,5 +59,50 @@ namespace CloneFolderUSB
             return $"{bytes:0.##} {sizes[order]}";
         }
 
+
+        private void DestinationlistBoxDrives(object sender, EventArgs e)
+        {
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT * FROM Win32_DiskDrive WHERE InterfaceType='USB'");
+
+            foreach (ManagementObject disk in searcher.Get())
+                foreach (ManagementObject partition in new ManagementObjectSearcher(
+                    "ASSOCIATORS OF {Win32_DiskDrive.DeviceID='" + disk["DeviceID"] + "'} WHERE AssocClass=Win32_DiskDriveToDiskPartition").Get())
+                    foreach (ManagementObject logicalDisk in new ManagementObjectSearcher(
+                        "ASSOCIATORS OF {Win32_DiskPartition.DeviceID='" + partition["DeviceID"] + "'} WHERE AssocClass=Win32_LogicalDiskToPartition").Get())
+                        DestinationListBoxDrives.Items.Add($"Drive: {logicalDisk["DeviceID"].ToString()}, " +
+                            $"Volume Name: {logicalDisk["VolumeName"].ToString()}, " +
+                            $"File System: {logicalDisk["FileSystem"].ToString()}, " +
+                            $"Size: {FormatSize(Convert.ToUInt64(logicalDisk["Size"]))}, " +
+                            $"Free Space: {FormatSize(Convert.ToUInt64(logicalDisk["freeSpace"]))}");
+
+            ButtonRefreshDestination.Click += RefreshCLickDestination;
+        }
+
+        private void ClickSelectedDriveDestination(object sender, EventArgs e)
+        {
+
+        }
+
+        private void RefreshCLickDestination(object sender, EventArgs e)
+        {
+            DestinationListBoxDrives.Items.Clear();
+            DestinationListBoxDrives.ClearSelected();
+            SourceListBoxDrives.ClearSelected();
+
+            this.DestinationlistBoxDrives(null, null);
+        }
+
+        private void RefreshCLickSoucer(object sender, EventArgs e) 
+        {
+            SourceListBoxDrives.Items.Clear();
+            SourceListBoxDrives.ClearSelected();
+
+            this.SourcelistBoxDrives(null, null);
+        }
+
+        private void ClickIniciar(object sender, EventArgs e)   
+        {
+
+        }
     }
 }

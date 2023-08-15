@@ -28,57 +28,106 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.checkedListBoxDrives = new System.Windows.Forms.ListBox();
-            this.SendSelectedDrive = new System.Windows.Forms.Button();
-            this.RefreshDriver = new System.Windows.Forms.Button();
+            this.SourceListBoxDrives = new System.Windows.Forms.ListBox();
+            this.ButtonSendSelectedDriveSource = new System.Windows.Forms.Button();
+            this.DestinationListBoxDrives = new System.Windows.Forms.ListBox();
+            this.ButtonSendSelectedDriveDestination = new System.Windows.Forms.Button();
+            this.ButtonRefreshDestination = new System.Windows.Forms.Button();
+            this.ButtonRefreshSoucer = new System.Windows.Forms.Button();
+            this.ButtonIniciar = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // checkedListBoxDrives
+            // SourceListBoxDrives
             // 
-            this.checkedListBoxDrives.FormattingEnabled = true;
-            this.checkedListBoxDrives.ItemHeight = 15;
-            this.checkedListBoxDrives.Location = new System.Drawing.Point(25, 30);
-            this.checkedListBoxDrives.Name = "checkedListBoxDrives";
-            this.checkedListBoxDrives.Size = new System.Drawing.Size(543, 124);
-            this.checkedListBoxDrives.TabIndex = 0;
-            this.Load += new System.EventHandler(this.listBoxDrives);
+            this.SourceListBoxDrives.FormattingEnabled = true;
+            this.SourceListBoxDrives.ItemHeight = 15;
+            this.SourceListBoxDrives.Location = new System.Drawing.Point(25, 63);
+            this.SourceListBoxDrives.Name = "SourceListBoxDrives";
+            this.SourceListBoxDrives.Size = new System.Drawing.Size(410, 124);
+            this.SourceListBoxDrives.TabIndex = 0;
             // 
-            // SendSelectedDrive
+            // ButtonSendSelectedDriveSource
             // 
-            this.SendSelectedDrive.Location = new System.Drawing.Point(25, 160);
-            this.SendSelectedDrive.Name = "SendSelectedDrive";
-            this.SendSelectedDrive.Size = new System.Drawing.Size(75, 23);
-            this.SendSelectedDrive.TabIndex = 1;
-            this.SendSelectedDrive.Text = "Selecionar";
-            this.SendSelectedDrive.UseVisualStyleBackColor = true;
+            this.ButtonSendSelectedDriveSource.Location = new System.Drawing.Point(25, 193);
+            this.ButtonSendSelectedDriveSource.Name = "ButtonSendSelectedDriveSource";
+            this.ButtonSendSelectedDriveSource.Size = new System.Drawing.Size(75, 23);
+            this.ButtonSendSelectedDriveSource.TabIndex = 1;
+            this.ButtonSendSelectedDriveSource.Text = "Selecionar";
+            this.ButtonSendSelectedDriveSource.UseVisualStyleBackColor = true;
             // 
-            // RefreshDriver
+            // DestinationListBoxDrives
             // 
-            this.RefreshDriver.Location = new System.Drawing.Point(465, 160);
-            this.RefreshDriver.Name = "RefreshDriver";
-            this.RefreshDriver.Size = new System.Drawing.Size(103, 23);
-            this.RefreshDriver.TabIndex = 2;
-            this.RefreshDriver.Text = "Atualizar Drivers";
-            this.RefreshDriver.UseVisualStyleBackColor = true;
+            this.DestinationListBoxDrives.FormattingEnabled = true;
+            this.DestinationListBoxDrives.ItemHeight = 15;
+            this.DestinationListBoxDrives.Location = new System.Drawing.Point(467, 63);
+            this.DestinationListBoxDrives.Name = "DestinationListBoxDrives";
+            this.DestinationListBoxDrives.Size = new System.Drawing.Size(410, 124);
+            this.DestinationListBoxDrives.TabIndex = 3;
+            // 
+            // ButtonSendSelectedDriveDestination
+            // 
+            this.ButtonSendSelectedDriveDestination.Location = new System.Drawing.Point(467, 193);
+            this.ButtonSendSelectedDriveDestination.Name = "ButtonSendSelectedDriveDestination";
+            this.ButtonSendSelectedDriveDestination.Size = new System.Drawing.Size(75, 23);
+            this.ButtonSendSelectedDriveDestination.TabIndex = 4;
+            this.ButtonSendSelectedDriveDestination.Text = "Selecionar";
+            this.ButtonSendSelectedDriveDestination.UseVisualStyleBackColor = true;
+            // 
+            // ButtonRefreshDestination
+            // 
+            this.ButtonRefreshDestination.Location = new System.Drawing.Point(548, 193);
+            this.ButtonRefreshDestination.Name = "ButtonRefreshDestination";
+            this.ButtonRefreshDestination.Size = new System.Drawing.Size(75, 23);
+            this.ButtonRefreshDestination.TabIndex = 5;
+            this.ButtonRefreshDestination.Text = "Atualizar";
+            this.ButtonRefreshDestination.UseVisualStyleBackColor = true;
+            // 
+            // ButtonRefreshSoucer
+            // 
+            this.ButtonRefreshSoucer.Location = new System.Drawing.Point(106, 193);
+            this.ButtonRefreshSoucer.Name = "ButtonRefreshSoucer";
+            this.ButtonRefreshSoucer.Size = new System.Drawing.Size(75, 23);
+            this.ButtonRefreshSoucer.TabIndex = 7;
+            this.ButtonRefreshSoucer.Text = "Atualizar";
+            this.ButtonRefreshSoucer.UseVisualStyleBackColor = true;
+            // 
+            // ButtonIniciar
+            // 
+            this.ButtonIniciar.Location = new System.Drawing.Point(154, 268);
+            this.ButtonIniciar.Name = "ButtonIniciar";
+            this.ButtonIniciar.Size = new System.Drawing.Size(75, 23);
+            this.ButtonIniciar.TabIndex = 8;
+            this.ButtonIniciar.Text = "Iniciar";
+            this.ButtonIniciar.UseVisualStyleBackColor = true;
+            this.ButtonIniciar.Click += new System.EventHandler(this.ClickIniciar);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(600, 450);
-            this.Controls.Add(this.RefreshDriver);
-            this.Controls.Add(this.SendSelectedDrive);
-            this.Controls.Add(this.checkedListBoxDrives);
+            this.ClientSize = new System.Drawing.Size(900, 450);
+            this.Controls.Add(this.ButtonIniciar);
+            this.Controls.Add(this.ButtonRefreshSoucer);
+            this.Controls.Add(this.ButtonRefreshDestination);
+            this.Controls.Add(this.ButtonSendSelectedDriveDestination);
+            this.Controls.Add(this.DestinationListBoxDrives);
+            this.Controls.Add(this.ButtonSendSelectedDriveSource);
+            this.Controls.Add(this.SourceListBoxDrives);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.MainForm_Load);
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
-        private ListBox checkedListBoxDrives;
-        private Button SendSelectedDrive;
-        private Button RefreshDriver;
+        private ListBox SourceListBoxDrives;
+        private ListBox DestinationListBoxDrives;
+        private Button ButtonSendSelectedDriveSource;
+        private Button ButtonSendSelectedDriveDestination;
+        private Button ButtonRefreshDestination;
+        private Button ButtonRefreshSoucer;
+        private Button ButtonIniciar;
     }
 }
