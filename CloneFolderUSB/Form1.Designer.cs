@@ -104,6 +104,7 @@ namespace CloneFolderUSB
             // 
             // ButtonIniciar
             // 
+            this.ButtonIniciar.Enabled = false;
             this.ButtonIniciar.Location = new System.Drawing.Point(25, 259);
             this.ButtonIniciar.Name = "ButtonIniciar";
             this.ButtonIniciar.Size = new System.Drawing.Size(75, 23);
@@ -111,7 +112,6 @@ namespace CloneFolderUSB
             this.ButtonIniciar.Text = "Iniciar";
             this.ButtonIniciar.UseVisualStyleBackColor = true;
             this.ButtonIniciar.Click += new System.EventHandler(this.ClickIniciar);
-            this.ButtonIniciar.Enabled= false;
             // 
             // progressBar2
             // 
@@ -127,7 +127,7 @@ namespace CloneFolderUSB
             this.labelCLonarUsb.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.labelCLonarUsb.Location = new System.Drawing.Point(25, 18);
             this.labelCLonarUsb.Name = "labelCLonarUsb";
-            this.labelCLonarUsb.Size = new System.Drawing.Size(157, 17);
+            this.labelCLonarUsb.Size = new System.Drawing.Size(241, 17);
             this.labelCLonarUsb.TabIndex = 10;
             this.labelCLonarUsb.Text = "Criar e gravar uma imagem de um drive usb";
             // 
@@ -185,7 +185,7 @@ namespace CloneFolderUSB
             this.Controls.Add(this.DestinationListBoxDrives);
             this.Controls.Add(this.ButtonSendSelectedDriveSource);
             this.Controls.Add(this.SourceListBoxDrives);
-            this.Name = "Clone usb to usb";
+            this.Name = "Form1";
             this.Text = "Copiar Pendrive";
             this.Load += new System.EventHandler(this.MainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.DireitaEsquerda)).EndInit();

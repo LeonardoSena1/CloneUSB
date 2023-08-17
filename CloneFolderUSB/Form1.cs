@@ -5,11 +5,13 @@ namespace CloneFolderUSB
 {
     public partial class Form1 : Form
     {
+        static HashSet<string> GetAllPathsClone = new HashSet<string>();
+
         public Form1()
         {
             InitializeComponent();
 
-            this.FormBorderStyle = FormBorderStyle.FixedSingle;            
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
         }
@@ -129,7 +131,6 @@ namespace CloneFolderUSB
 
                     if (PreparationForm1.CheckIfDiskExists(soucer) && PreparationForm1.CheckIfDiskExists(destination))
                     {
-                        progressBar(IsValueMax: true, ValueMax: PreparationForm1.CountFilesInDirectory(soucer));
                         CopyFolder(soucer, destination);
                         progressBar(Final: true);
                         labelConcluid.Visible = true;
@@ -155,7 +156,7 @@ namespace CloneFolderUSB
         private void progressBar(int i = 0, bool Final = false, bool IsValueMax = false, int ValueMax = 100)
         {
             if (IsValueMax)
-                progressBar2.Maximum = ValueMax;
+                progressBar2.Maximum += ValueMax;
 
             progressBar2.Value = i;
 
@@ -169,22 +170,53 @@ namespace CloneFolderUSB
         void CopyFolder(string sourcePath, string targetPath)
         {
             int indexProgressBar = 1;
-            string[] files = Directory.GetFiles(sourcePath);
-            string[] subDirectories = Directory.GetDirectories(sourcePath);
 
-            foreach (string file in files)
+            progressBar2.Maximum = 0;
+
+            ListAllFolders(sourcePath, targetPath);
+
+            foreach (string subDir in GetAllPathsClone)
             {
-                //File.Copy(file, Path.Combine(targetPath, Path.GetFileName(file)).ToString(), true);
-                progressBar(indexProgressBar);
-                indexProgressBar++;
+                string[] subDirFiles = Directory.GetFiles(subDir);
+
+                progressBar(IsValueMax: true, ValueMax: subDirFiles.Length);
+
+                foreach (string file in subDirFiles)
+                {
+                    string destinationFilePath = targetPath + file.Substring(2);
+
+                    File.Copy(file, destinationFilePath);
+                    progressBar(indexProgressBar);
+                    indexProgressBar++;
+                }
             }
 
-            foreach (string subDir in subDirectories)
+            GetAllPathsClone.Clear();
+        }
+
+        static void ListAllFolders(string folderPath, string targetPath)
+        {
+            try
             {
-                if (!subDir.Contains("System Volume Information"))
-                    CopyFolder(subDir, Path.Combine(targetPath, Path.GetFileName(subDir)));
-                progressBar(indexProgressBar);
-                indexProgressBar++;
+                GetAllPathsClone.Add(folderPath);
+
+                string[] subDirectories = Directory.GetDirectories(folderPath);
+
+                foreach (string subDir in subDirectories)
+                    if (!subDir.Contains("System Volume Information"))
+                    {
+                        string destinationFilePath = targetPath + subDir.Substring(2);
+
+                        if (!Directory.Exists(destinationFilePath))
+                            Directory.CreateDirectory(destinationFilePath);
+
+                        GetAllPathsClone.Add(subDir);
+                        ListAllFolders(subDir, targetPath);
+                    }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
             }
         }
 
