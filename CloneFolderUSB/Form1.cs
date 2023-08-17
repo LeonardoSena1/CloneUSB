@@ -126,28 +126,26 @@ namespace CloneFolderUSB
                     soucer = soucer.Split(':')[1].Trim() + ":";
                     destination = destination.Split(':')[1].Trim() + ":";
 
-                    if (soucer.Equals(destination))
-                        throw new Exception("Impossível clonar um dispositivo no mesmo dispositivo.");
+                    string IsValid = PreparationForm1.CheckDisponibilidadeClone(soucer, destination);
 
-                    if (PreparationForm1.CheckIfDiskExists(soucer) && PreparationForm1.CheckIfDiskExists(destination))
+                    if (string.IsNullOrEmpty(IsValid))
                     {
+                        progressBar(IsValueMax: true, ValueMax: PreparationForm1.CountFilesInDirectory(soucer));
                         CopyFolder(soucer, destination);
-                        progressBar(Final: true);
-                        labelConcluid.Visible = true;
                     }
-                    else
-                        throw new Exception("Disk Local não encontrado");
+                    else                    
+                        MessageBox.Show(IsValid, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);                    
 
                     IsShowButtons(true);
                 }
                 catch (UnauthorizedAccessException ex)
                 {
-                    MessageBox.Show($"Access denied: {ex.Message}");
+                    MessageBox.Show($"Access denied: {ex.Message}", "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     IsShowButtons(true);
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show(ex.Message, "Erro", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     IsShowButtons(true);
                 }
             }
@@ -156,7 +154,7 @@ namespace CloneFolderUSB
         private void progressBar(int i = 0, bool Final = false, bool IsValueMax = false, int ValueMax = 100)
         {
             if (IsValueMax)
-                progressBar2.Maximum += ValueMax;
+                progressBar2.Maximum = ValueMax;
 
             progressBar2.Value = i;
 
@@ -171,15 +169,11 @@ namespace CloneFolderUSB
         {
             int indexProgressBar = 1;
 
-            progressBar2.Maximum = 0;
-
             ListAllFolders(sourcePath, targetPath);
 
             foreach (string subDir in GetAllPathsClone)
             {
                 string[] subDirFiles = Directory.GetFiles(subDir);
-
-                progressBar(IsValueMax: true, ValueMax: subDirFiles.Length);
 
                 foreach (string file in subDirFiles)
                 {
@@ -190,7 +184,8 @@ namespace CloneFolderUSB
                     indexProgressBar++;
                 }
             }
-
+            progressBar(Final: true);
+            labelConcluid.Visible = true;
             GetAllPathsClone.Clear();
         }
 

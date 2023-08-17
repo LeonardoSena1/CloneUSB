@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CloneFolderUSB.Components
+﻿namespace CloneFolderUSB.Components
 {
     public static class PreparationForm1
     {
@@ -31,6 +25,11 @@ namespace CloneFolderUSB.Components
 
         public static int CountFilesInDirectory(string directoryPath)
         {
+            return Count(directoryPath);
+        }
+
+        private static int Count(string directoryPath)
+        {
             int fileCount = 0;
 
             string[] files = Directory.GetFiles(directoryPath);
@@ -41,8 +40,7 @@ namespace CloneFolderUSB.Components
 
             foreach (string subDirectory in subDirectories)
                 if (!subDirectory.Contains("System Volume Information"))
-                    fileCount += CountFilesInDirectory(subDirectory);
-
+                    fileCount += Count(subDirectory);
             return fileCount;
         }
 
@@ -53,6 +51,27 @@ namespace CloneFolderUSB.Components
                 if (string.Equals(drive.Name.Remove(2), diskName, StringComparison.OrdinalIgnoreCase))
                     return true;
             return false;
+        }
+
+        public static string CheckDisponibilidadeClone(string soucer, string destination)
+        {
+            string IsValid = string.Empty;
+
+            if (soucer.Equals(destination))
+                IsValid = "Impossível clonar um dispositivo no mesmo dispositivo.";
+
+            if (!PreparationForm1.CheckIfDiskExists(soucer) && !PreparationForm1.CheckIfDiskExists(destination))
+                IsValid = "Disk Local não encontrado";
+            else if (GetDriveFreeSpace(destination) >= GetDriveFreeSpace(soucer))
+                IsValid = "Espaço Indisponivel na unidade de destino é igual ou maior do que na unidade de origem.";
+
+            return IsValid;
+        }
+
+        static long GetDriveFreeSpace(string driveLetter)
+        {
+            DriveInfo driveInfo = new DriveInfo(driveLetter);
+            return driveInfo.AvailableFreeSpace / (1024 * 1024 * 1024);
         }
     }
 }
